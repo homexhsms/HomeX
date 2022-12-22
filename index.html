@@ -1,3 +1,49 @@
+<?php
+
+@include 'config.php';
+
+session_start();
+
+if(isset($_POST['submit'])){
+
+   //$name = mysqli_real_escape_string($conn, $_POST['name']);
+   $email = mysqli_real_escape_string($conn, $_POST['email']);
+   //$pass = md5($_POST['password']);
+   //$cpass = md5($_POST['cpassword']);
+   //$user_type = $_POST['user_type'];
+
+   $select = " SELECT * FROM user_form WHERE email = '$email' ";
+
+   $result = mysqli_query($conn, $select);
+
+   if(mysqli_num_rows($result) > 0){
+
+      $row = mysqli_fetch_array($result);
+
+      if($row['user_type'] == 'admin'){
+
+         $_SESSION['admin_name'] = $row['name'];
+         header('location:admin_page.php');
+
+      }elseif($row['user_type'] == 'user'){
+
+         $_SESSION['user_name'] = $row['name'];
+         header('location:user_page.php');
+
+      }elseif($row['user_type'] == 'security'){
+
+         $_SESSION['security_name'] = $row['name'];
+         header('location:security_page.php');
+
+      }
+     
+   }else{
+      $error[] = 'incorrect email or password!';
+   }
+
+};
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -112,19 +158,15 @@
         <div class="form-container">
             <div id="h1">
                 <center>
-                    <h1 style="font-family:Times New Roman,Times,serif; font-size: 50px;"><b>Thank you for getting in
-                            touch!<b></h1>
+                    <h1 style="font-family:Times New Roman,Times,serif; font-size: 50px;"><b>We have received a request to reset your password.!<b></h1>
 
 
-                    <img class="transform_animation" src="img/10.png" height="50">
+                    <img class="transform_animation" src="img/10.png" height="150">
 
                     <p style="font-size:20px;font-family:Times New Roman,Times,serif;line-height: 1.2;font-size: 25px;">
-                        " We appreciate you contacting us.One of our colleagues will
-                        get back in touch with you soon!<br>Have a great day!"</p>
+                    We appreciate you contacting us and will do our best to help you reset your password as quickly as possible. 
+                    One of our colleagues will be in touch with you soon.<br>Have a great day!"</p>
 
-                    <br>
-                    <br>
-                    <button type="submit" id="btn"><a href="index.php">Back To Home</a></button>
 
                 </center>
             </div>
